@@ -1,0 +1,155 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ericsson.oss.mediation.nrm.function</groupId>
+        <artifactId>o1node-node-model</artifactId>
+        <version>1.1.4-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>ERICo1nodenodemodel_CXP9043222</artifactId>
+    <packaging>rpm</packaging>
+    <name>[${project.parent.artifactId}] RPM module</name>
+    <description>RPM module</description>
+
+    <properties>
+        <publish_artifact>true</publish_artifact>
+        <media.category>model</media.category>
+        <com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+        <rpm.name>${project.artifactId}</rpm.name>
+        <rpm.version>${project.version}</rpm.version>
+        <model-install-path>/var/opt/ericsson/ERICmodeldeployment/data/install</model-install-path>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.nrm.function</groupId>
+            <artifactId>${project.parent.artifactId}-1-100-1.0-jar</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <outputDirectory>${project.parent.artifactId}-${project.version}</outputDirectory>
+        <plugins>
+            <plugin>
+                <!--This copies the solution set xml from src/main/xml to target/resources
+                    Filtering is enabled which replaces any Maven properties in the file with
+                    their values -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>filter</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/resources</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/xml</directory>
+                                    <includes>
+                                        <include>**.xml</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Copy JAR of O1Node Network Resource Model</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.ericsson.oss.mediation.nrm.function</groupId>
+                                    <artifactId>${project.parent.artifactId}-1-100-1.0-jar</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target/opt/ericsson/o1node_nrm/models</outputDirectory>
+                                    <destFileName>${project.parent.artifactId}-1-100-1.0-jar-${project.version}.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration combine.self="override">
+                    <copyright>2023 Ericsson AB All rights reserved</copyright>
+                    <name>${rpm.name}</name>
+                    <versionProperty>${rpm.version}</versionProperty>
+                    <group>ERI-NMS</group>
+                    <release>2</release>
+                    <vendor>Ericsson AB</vendor>
+                    <summary>o1node_nrm</summary>
+                    <mappings>
+                        <mapping>
+                            <directory>${model-install-path}</directory>
+                            <filemode>754</filemode>
+                            <username>mdtuser</username>
+                            <groupname>mdt</groupname>
+                            <configuration>false</configuration>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>true</recurseDirectories>
+                            <sources>
+                                <source>
+                                    <location>target/opt/ericsson/o1node_nrm/models</location>
+                                    <includes>
+                                        <include>**/*</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+                    </mappings>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>com.ericsson.oss.itpf.deployment</groupId>
+                <artifactId>deployment-descriptor-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>configurable-entity</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configEntity>
+                        <stereotype>MODEL_PKG</stereotype>
+                        <parameters>
+                            <itemType name="model-package">
+                                <property name="name" defaultValue="ERICo1nodenodemodel_CXP9043222" />
+                            </itemType>
+                        </parameters>
+                        <deploymentDependencies>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.mediation.nrm.function</groupId>
+                                <artifactId>ERICo1nodenodemodelcommon_CXP9043223</artifactId>
+                                <alias>o1nodenodemodelcommon</alias>
+                            </deploymentDependency>
+                        </deploymentDependencies>
+                    </configEntity>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

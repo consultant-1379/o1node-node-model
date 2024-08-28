@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ericsson.oss.mediation.model.nrm.function</groupId>
+        <artifactId>node-model-common-parent</artifactId>
+        <version>1.1.302</version>
+    </parent>
+
+    <groupId>com.ericsson.oss.mediation.nrm.function</groupId>
+    <artifactId>o1node-node-model</artifactId>
+    <version>1.1.4-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>[${project.artifactId}] Model Project</name>
+    <description>Contains the base models for the O1Node network element type</description>
+
+    <modules>
+        <module>o1node-node-model-1-100-1.0-jar</module>
+        <module>ERICo1nodenodemodel_CXP9043222</module>
+    </modules>
+
+    <properties>
+        <version.maven.ant.plugin>1.8</version.maven.ant.plugin>
+        <version.o1node-node-model-common>1.0.3</version.o1node-node-model-common>
+        <version.network-element-definition-model-models>3.54.1</version.network-element-definition-model-models>
+        <version.oss-top-model-models>2.9.1</version.oss-top-model-models>
+        <version.geo-location-model-xml>1.6.7</version.geo-location-model-xml>
+        <version.ned-mediation-handlers-models>1.57.2</version.ned-mediation-handlers-models>
+        <version.mediation-core-api-channel-models>1.2.22</version.mediation-core-api-channel-models>
+        <version.ned-mediation-models-models>1.28.1</version.ned-mediation-models-models>
+        <version.ned-mediation-handlers-models>1.57.2</version.ned-mediation-handlers-models>
+        <networkModelTransformer.outputPath>${basedir}/target/classes/modeling</networkModelTransformer.outputPath>
+        <ericsson.scm.url>scm:git:[fetch=]ssh://gerrit-gamma-read.seli.gic.ericsson.se:29418/OSS/ENM-Parent/SQ-Gate/com.ericsson.oss.mediation.nrm.function/o1node-node-model[push=]ssh://gerrit-gamma.gic.ericsson.se:29418/OSS/ENM-Parent/SQ-Gate/com.ericsson.oss.mediation.nrm.function/o1node-node-model</ericsson.scm.url>
+    </properties>
+
+    <!--Profile to deploy latest site -->
+    <profiles>
+        <profile>
+            <id>site_latest</id>
+            <distributionManagement>
+                <site>
+                    <id>site</id>
+                    <name>Site</name>
+                    <url>${site.url}/o1node-node-model/latest</url>
+                </site>
+            </distributionManagement>
+        </profile>
+
+        <!--Profile to stage site for review -->
+
+        <profile>
+            <id>site_review</id>
+            <distributionManagement>
+                <site>
+                    <id>site</id>
+                    <name>Site</name>
+                    <url>${site.url}</url>
+                </site>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+    <!--Deployment of versioned documentation -->
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <name>Site</name>
+            <url>${site.url}/o1node-node-model/${project.version}</url>
+        </site>
+    </distributionManagement>
+
+    <scm>
+        <developerConnection>${ericsson.scm.url}</developerConnection>
+        <connection>${ericsson.scm.url}</connection>
+        <tag>HEAD</tag>
+    </scm>
+
+</project>
